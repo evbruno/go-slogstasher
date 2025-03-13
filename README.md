@@ -1,4 +1,4 @@
-![Go Tests](https://github.com/evbruno/go-slogstasher/actions/workflows/test.yml/badge.svg)
+![Go Tests](https://github.com/evbruno/go-slogstasher/actions/workflows/build-and-test.yml/badge.svg)
 
 # Go slog.Handler for Logstash
 
