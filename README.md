@@ -1,4 +1,5 @@
-![Go Tests](https://github.com/evbruno/go-slogstasher/actions/workflows/build-and-test.yml/badge.svg)
+[![Build status](https://img.shields.io/github/actions/workflow/status/evbruno/go-slogstasher/build-and-test.yml?style=for-the-badge&branch=main)](https://github.com/evbruno/go-slogstasher/actions/actions?workflow=build-and-test)
+[![Release](https://img.shields.io/github/release/evbruno/go-slogstasher.svg?style=for-the-badge)](https://github.com/evbruno/go-slogstasher/releases/latest)
 
 # Go slog.Handler for Logstash
 
