@@ -4,8 +4,49 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
+	"os"
 	"runtime"
 )
+
+// public
+
+type EnvVarEntry struct {
+	EnvName   string
+	FieldName string
+	GroupName string
+}
+
+func ExtractAttrsFromEnvVar(fields []EnvVarEntry) []slog.Attr {
+	var attrs []slog.Attr
+	var groups map[string][]any = make(map[string][]any)
+
+	for _, f := range fields {
+		if f.EnvName == "" {
+			continue
+		}
+
+		if value := os.Getenv(f.EnvName); value != "" {
+			fieldName := f.FieldName
+			if fieldName == "" {
+				fieldName = f.EnvName
+			}
+
+			if f.GroupName != "" {
+				groups[f.GroupName] = append(groups[f.GroupName], slog.String(fieldName, value))
+			} else {
+				attrs = append(attrs, slog.String(fieldName, value))
+			}
+		}
+	}
+
+	for k, v := range groups {
+		attrs = append(attrs, slog.Group(k, v...))
+	}
+
+	return attrs
+}
+
+// internal
 
 func (h *Logtsash) formatMessage(_ context.Context, record *slog.Record) map[string]any {
 	log := map[string]any{

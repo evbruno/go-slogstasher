@@ -22,7 +22,7 @@ Simple usage:
 import (
 	"log/slog"
 
-	s "github.com/evbruno/go-slogstasher/v1"
+	s "github.com/evbruno/go-slogstasher"
 )
 
 stash := &s.LogstashOpts{
