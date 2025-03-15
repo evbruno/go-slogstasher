@@ -62,7 +62,7 @@ newAttrs []any = su.ExtractAttrsFromEnvVar(envVarAttrs)
 
 // use it!
 
-log.With(attrs...).Info("Hi there !")
+log.With(attrs...).Info("Hi there env vars !")
 
 ```
 
