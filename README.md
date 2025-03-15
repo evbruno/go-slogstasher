@@ -42,5 +42,34 @@ Outputs:
 {"@timestamp":"2025-03-13T13:34:52.514582Z","level":"INFO","logger":"go.slogstasher","message":"Hello world of Go!","version":"1"}
 ```
 
+## Utils
+
+Load a set of fields from the env var, and return the appropiate `slog.Attr`.
+
+**Note**: type is `[]any` to make our life easier when dealing with `slog.With`.
+
+```go
+
+// import su "github.com/evbruno/go-slogstasher/utils"
+
+envVarAttrs :=  []su.EnvVarEntry{
+	{Key: "K8S_CONTAINER_NAME", Attr: "name", Group: "process"},
+	{Key: "K8S_POD_NAME", Attr: "source", Group: "process"},
+	{Key: "K8S_SERVICE", Attr: "service"},
+}
+
+newAttrs []any = su.ExtractAttrsFromEnvVar(envVarAttrs)
+
+// use it!
+
+log.With(attrs...).Info("Hi there !")
+
+```
+
+Outputs:
+
+```
+2025/03/14 20:56:56 INFO Hi there env vars ! service=my-service kubernetes.container=my-container kubernetes.pod=my-pod-0001
+```
 
 
