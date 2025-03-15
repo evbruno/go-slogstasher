@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"log/slog"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -36,7 +35,7 @@ func TestExtractFromEnvVar(t *testing.T) {
 		{"K8S_CONTAINER_NAME", "name", "process"},
 	}
 
-	subject := entriesToAttrs(entries)
+	subject := ExtractAttrsFromEnvVar(entries)
 	assert.Equal("process", subject[0].Key)
 	assert.Equal("Group", subject[0].Value.Kind().String())
 	assert.Equal("[name=my-container]", subject[0].Value.String())
@@ -49,7 +48,7 @@ func TestExtractFromEnvVar(t *testing.T) {
 		{"K8S_POD_NAME", "source", "process"},
 	}
 
-	subject = entriesToAttrs(entries)
+	subject = ExtractAttrsFromEnvVar(entries)
 	assert.Len(subject, 1)
 	assert.Equal("Group", subject[0].Value.Kind().String())
 	assert.Equal("name=my-container", subject[0].Value.Group()[0].String())
@@ -67,21 +66,11 @@ func TestExtractFromEnvVar(t *testing.T) {
 		{"", "container_name2", "kubernetes"},
 	}
 
-	subject = entriesToAttrs(entries)
+	subject = ExtractAttrsFromEnvVar(entries)
 	assert.Len(subject, 3)
 
 	assert.Equal("my-cool-svc", subject[0].Value.String())
 	assert.Equal("[name=my-container source=my-pod-001]", subject[1].Value.String())
 	// no field provided, fallback to the env var name
 	assert.Equal("[container_name=my-container K8S_POD_NAME=my-pod-001]", subject[2].Value.String())
-}
-
-// manual "cast" any to slog.Attr
-func entriesToAttrs(entries []EnvVarEntry) []slog.Attr {
-	attrs := ExtractAttrsFromEnvVar(entries)
-	res := make([]slog.Attr, len(attrs))
-	for i, a := range attrs {
-		res[i] = a.(slog.Attr)
-	}
-	return res
 }

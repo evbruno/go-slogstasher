@@ -44,9 +44,7 @@ Outputs:
 
 ## Utils
 
-Load a set of fields from the env var, and return the appropiate `slog.Attr`.
-
-**Note**: type is `[]any` to make our life easier when dealing with `slog.With`.
+Load a set of fields from the env var, and return the appropiate `slog.Attr` (or `any`).
 
 ```go
 
@@ -58,18 +56,29 @@ envVarAttrs :=  []su.EnvVarEntry{
 	{Key: "K8S_SERVICE", Attr: "service"},
 }
 
-newAttrs []any = su.ExtractAttrsFromEnvVar(envVarAttrs)
-
-// use it!
-
-log.With(attrs...).Info("Hi there env vars !")
+var args []any = su.ExtractArgsFromEnvVar(opts)
+slog.With(args...).Info("Hi there env vars + args")
 
 ```
 
 Outputs:
 
 ```
-2025/03/14 20:56:56 INFO Hi there env vars ! service=my-service kubernetes.container=my-container kubernetes.pod=my-pod-0001
+2025/03/14 21:18:04 INFO Hi there env vars + args service=my-service kubernetes.container=my-container kubernetes.pod=my-pod-0001
 ```
 
+*... or use the alternative method:*
 
+```go
+
+var attrs []slog.Attr = su.ExtractAttrsFromEnvVar(opts)
+logger := slog.New(slog.NewTextHandler(os.Stdout, nil).WithAttrs(attrs))
+logger.Info("Hi there env vars with attrs !")
+
+```
+
+Outputs:
+
+```
+time=2025-03-14T21:18:04.831-03:00 level=INFO msg="Hi there env vars with attrs !" service=my-service kubernetes.container=my-container kubernetes.pod=my-pod-0001
+```

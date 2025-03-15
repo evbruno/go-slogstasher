@@ -11,11 +11,22 @@ type EnvVarEntry struct {
 	Group string
 }
 
-func ExtractAttrsFromEnvVar(fields []EnvVarEntry) []any {
-	var attrs []any
+func ExtractArgsFromEnvVar(entries []EnvVarEntry) []any {
+	attrs := ExtractAttrsFromEnvVar(entries)
+	res := make([]any, len(attrs))
+
+	for i, a := range attrs {
+		res[i] = a
+	}
+
+	return res
+}
+
+func ExtractAttrsFromEnvVar(entries []EnvVarEntry) []slog.Attr {
+	var attrs []slog.Attr
 	var groups map[string][]any = make(map[string][]any)
 
-	for _, f := range fields {
+	for _, f := range entries {
 		if f.Key == "" {
 			continue
 		}
