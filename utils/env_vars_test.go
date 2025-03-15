@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"sort"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -68,6 +69,12 @@ func TestExtractFromEnvVar(t *testing.T) {
 
 	subject = ExtractAttrsFromEnvVar(entries)
 	assert.Len(subject, 3)
+
+	sort.Slice(subject, func(i, j int) bool {
+		a := subject[i]
+		b := subject[j]
+		return a.Key > b.Key
+	})
 
 	assert.Equal("my-cool-svc", subject[0].Value.String())
 	assert.Equal("[name=my-container source=my-pod-001]", subject[1].Value.String())
