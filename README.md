@@ -51,9 +51,9 @@ Load a set of fields from the env var, and return the appropiate `slog.Attr` (or
 // import su "github.com/evbruno/go-slogstasher/utils"
 
 envVarAttrs :=  []su.EnvVarEntry{
-	{Key: "K8S_CONTAINER_NAME", Attr: "name", Group: "process"},
-	{Key: "K8S_POD_NAME", Attr: "source", Group: "process"},
-	{Key: "K8S_SERVICE", Attr: "service"},
+	{Env: "K8S_CONTAINER_NAME", Attr: "name", Group: "process"},
+	{Env: "K8S_POD_NAME", Attr: "source", Group: "process"},
+	{Env: "K8S_SERVICE", Attr: "service"},
 }
 
 var args []any = su.ExtractArgsFromEnvVar(opts)

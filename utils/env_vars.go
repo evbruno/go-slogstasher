@@ -6,7 +6,7 @@ import (
 )
 
 type EnvVarEntry struct {
-	Key   string
+	Env   string
 	Attr  string
 	Group string
 }
@@ -27,14 +27,14 @@ func ExtractAttrsFromEnvVar(entries []EnvVarEntry) []slog.Attr {
 	var groups map[string][]any = make(map[string][]any)
 
 	for _, f := range entries {
-		if f.Key == "" {
+		if f.Env == "" {
 			continue
 		}
 
-		if value := os.Getenv(f.Key); value != "" {
+		if value := os.Getenv(f.Env); value != "" {
 			fieldName := f.Attr
 			if fieldName == "" {
-				fieldName = f.Key
+				fieldName = f.Env
 			}
 
 			if f.Group != "" {
