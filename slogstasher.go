@@ -41,14 +41,14 @@ type Logtsash struct {
 
 func NewLogstashHandler(opts *LogstashOpts) slog.Handler {
 	if opts.Conn == nil {
-		addr := fmt.Sprintf("%s:%d", opts.Host, opts.Port)
-		// DEBUG?
-		// fmt.Println("Connecting to logstash at", addr, string(opts.Type))
+		addr := net.JoinHostPort(opts.Host, fmt.Sprintf("%d", opts.Port))
+		// FIMXE: DEBUG?
+		fmt.Println("[DEBUG] Connecting to logstash at", addr, string(opts.Type))
 		conn, err := net.Dial(string(opts.Type), addr)
 
 		if err != nil {
 			// DEBUG?
-			// fmt.Println("Error connecting to logstash, fallback to stdout, err:", err)
+			fmt.Println("[DEBUG] Error connecting to logstash, fallback to stdout, err:", err)
 			return nil
 		}
 		opts.Conn = conn
@@ -81,8 +81,12 @@ func (h *Logtsash) Handle(ctx context.Context, record slog.Record) error {
 
 	go func() {
 		_, err = h.conn.Write(append(bytes, byte('\n')))
-		// DEBUG? retry?
-		// fmt.Println("Error writing to logstash:", err, string(bytes))
+		//FIXME: DEBUG? retry?
+		if err != nil {
+			fmt.Println("Error writing to logstash:", err, string(bytes))
+		} else {
+			fmt.Println("[DEBUG]", string(bytes))
+		}
 	}()
 
 	return err
